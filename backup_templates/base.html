@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% if user.student or user.tutor %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Signup</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+<footer>
+    <p>&copy; 2023 UMass OATS</p>
+</footer>
+</body>
+</html>

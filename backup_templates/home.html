@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Welcome, {{ user.username }}!</h1>
+    <a href="{% url 'available_slots' %}"><button>Available Slots</button></a>
+    {% if user.is_authenticated and user.student %}
+        <article>
+            <h3>Booked Slots</h3>
+            {% for slot in user.student.booked_slots.all %}
+                <p>{{ slot.date }} at {{ slot.timeblock }} with {{ slot.tutor }} for {{ slot.course }}</p>
+            {% empty %}
+                <p>No booked slots.</p>
+            {% endfor %}
+        </article>
+    {% endif %}
+    {% if user.is_authenticated and user.is_superuser %}
+        <article>
+            <h3>All Available Slots</h3>
+            {% for slot in slots %}
+                {% if slot.status == 'A' %}
+                    <p>{{ slot.date }} at {{ slot.timeblock }} with {{ slot.tutor }} for {{ slot.course }} </p>
+                {% endif %}
+            {% empty %}
+                <p>No slots available.</p>
+            {% endfor %}
+        </article>
+        <article>
+            <h3>All Booked Slots</h3>
+            {% for slot in slots %}
+                {% if slot.status != 'A' %}
+                    <p>{{ slot.date }} at {{ slot.timeblock }} with {{ slot.tutor }} for {{ slot.course }} with {{ slot.booked_by }}</p>
+                {% endif %}
+            {% empty %}
+                <p>No booked slots.</p>
+            {% endfor %}
+        </article>
+        <a href="{% url 'create_slot' %}"><button>Create New Slot</button></a>
+        <a href="{% url 'assign_roles' %}"><button>Assign Role</button></a>
+    {% endif %}
+    {% if user.is_authenticated and user.tutor %}
+        <article>
+            <h3>Booked Slots</h3>
+            {% for slot in user.tutor.availabilities.all %}
+                {% if slot.status != 'A' %}
+                    <p>{{ slot.date }} at {{ slot.timeblock }} with {{ slot.booked_by }} for {{ slot.course }}</p>
+                {% endif %}
+            {% empty %}
+                <p>No booked slots.</p>
+            {% endfor %}
+        </article>
+        <article>
+            <h3>Open Slots</h3>
+            {% for slot in user.tutor.availabilities.all %}
+                {% if slot.status == 'A' %}
+                    <p>{{ slot.date }} at {{ slot.timeblock }} for {{ slot.course }}</p>
+                {% endif %}
+            {% empty %}
+                <p>No open slots.</p>
+            {% endfor %}
+        </article>
+        <a href="{% url 'create_slot' %}"><button>Create New Slot</button></a>
+    {% endif %}
+{% endblock %}

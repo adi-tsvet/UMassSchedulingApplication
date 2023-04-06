@@ -1,0 +1,35 @@
+{% extends '../backup_templates/base.html' %}
+
+{% block title %}Create Slot{% endblock %}
+
+{% block content %}
+    <h1>Create Slot</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% if request.user.is_superuser %}
+            {{ form.as_p }}
+        {% else %}
+            <p>
+                <label for="{{ form.tutor.id_for_label }}">Tutor:</label>
+                {{ request.user.tutor }}
+            </p>
+            <p>
+                <label for="{{ form.date.id_for_label }}">Date:</label>
+                {{ form.date }}
+            </p>
+            <p>
+                <label for="{{ form.timeblock.id_for_label }}">Time block:</label>
+                {{ form.timeblock }}
+            </p>
+            <p>
+                <label for="{{ form.course.id_for_label }}">Course:</label>
+                {{ form.course }}
+            </p>
+            <p>
+                <label for="{{ form.status_for_label }}">Status:</label>
+                {{ form.status }}
+            </p>
+        {% endif %}
+        <button type="submit">Create Slot</button>
+    </form>
+{% endblock %}

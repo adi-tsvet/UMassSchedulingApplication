@@ -1,0 +1,63 @@
+{% extends "../backup_templates/base.html" %}
+
+{% block content %}
+
+    <article>
+        <h1>AVAILABLE SLOTS</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>Tutor</th>
+                <th>Course</th>
+                <th>Date</th>
+                <th>TIME BLOCK</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for slot in slots %}
+                {% if slot.status == 'A' and slot.course in user.student.courses.all %}
+                    <tr>
+                        <td>{{ slot.tutor }}</td>
+                        <td>{{ slot.course }}</td>
+                        <td>{{ slot.date }}</td>
+                        <td>{{ slot.timeblock }}</td>
+                        <td>{{ slot.status }}</td>
+                        <td><a href="{% url 'booking_page' slot.id %}">
+                            <button>Book</button></a>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if user.is_authenticated and user.is_superuser %}
+                    <tr>
+                        <td>{{ slot.tutor }}</td>
+                        <td>{{ slot.course }}</td>
+                        <td>{{ slot.date }}</td>
+                        <td>{{ slot.timeblock }}</td>
+                        <td>{{ slot.status }}</td>
+                        <td><a href="{% url 'booking_page' slot.id %}">
+                            <button>Assign Student</button></a>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if user.is_authenticated and user.tutor.courses.all %}
+                    <tr>
+                        <td>{{ slot.tutor }}</td>
+                        <td>{{ slot.course }}</td>
+                        <td>{{ slot.date }}</td>
+                        <td>{{ slot.timeblock }}</td>
+                        <td>{{ slot.status }}</td>
+                        <td><a href="{% url 'booking_page' slot.id %}">
+                            <button>Assign Student</button></a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </article>
+
+    <a href="{% url 'home' %}"><button>Back</button></a>
+
+{% endblock content %}
