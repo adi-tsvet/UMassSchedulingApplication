@@ -10,33 +10,30 @@
     </div>
     {% if user.is_authenticated and user.student %}
         <article>
-            <p>Student Profile</p>
-        </article>
-        <article>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to make changes?')">Save</button>
             </form>
-            <a href="{% url 'home' %}"><button>Back</button></a>
         </article>
     {% endif %}
     {% if user.is_authenticated and user.is_superuser %}
         <article>
-            <p>Admin Profile</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to make changes?')">Save</button>
+            </form>
         </article>
     {% endif %}
     {% if user.is_authenticated and user.tutor %}
-        <article>
-            <p>Tutor Profile</p>
-        </article>
+
         <article>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to make changes?')">Save</button>
             </form>
-            <a href="{% url 'home' %}"><button>Back</button></a>
         </article>
     {% endif %}
     <div>

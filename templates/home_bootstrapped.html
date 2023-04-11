@@ -14,7 +14,7 @@
                 <div class="sticky-top">
                 <h2> Today's student sessions: </h2>
                 {% for session in user.student.booked_slots.all %}
-                    {% if session.date == today %}
+                    {% if False %} {# session.date == today #}
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
                             <h5 class="card-title">{{session.tutor}}</h5>
@@ -81,5 +81,8 @@
                 {% endfor %}
             {% endif %}
 
+            {% if user.is_superuser %}
+                <a href="{% url 'assign_roles' %}"><button class = "btn btn-primary" > Assign Roles </button></a>
+            {% endif %}
         {% endif %}
 {% endblock %}

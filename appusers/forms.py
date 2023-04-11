@@ -1,8 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import DateInput
 from django.contrib.auth.models import User
 from .models import Availability, Tutor, Student
+
 
 
 class AvailabilityForm(forms.ModelForm):
@@ -107,3 +108,22 @@ class StudentForm(forms.ModelForm):
         if commit:
             user.save()
         return super().save(commit=commit)
+
+class AdminForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance:
+            self.initial['first_name'] = self.instance.first_name
+            self.initial['last_name'] = self.instance.last_name
+            self.initial['username'] = self.instance.username
+            self.initial['email'] = self.instance.email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+        return user
