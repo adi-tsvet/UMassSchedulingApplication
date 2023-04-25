@@ -9,10 +9,9 @@ from .models import Availability, Tutor, Student
 class AvailabilityForm(forms.ModelForm):
     class Meta:
         model = Availability
-        fields = ['tutor', 'date', 'timeblock', 'course', 'booked_by', 'status', 'semester']
+        fields = ['tutor', 'date', 'timeblock', 'course', 'booked_by', 'status']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
-            'semester': forms.TextInput(attrs={'disabled': True})
         }
         labels = {
             'booked_by': 'Student'
@@ -31,8 +30,7 @@ class AvailabilityForm(forms.ModelForm):
         elif not self.user.is_superuser:
             self.fields['tutor'].widget = forms.HiddenInput()
             self.fields['tutor'].initial = self.user.tutor
-        # disable the semester field
-        self.fields['semester'].disabled = True
+
     def clean(self):
         cleaned_data = super().clean()
         date = cleaned_data.get('date')

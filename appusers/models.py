@@ -66,7 +66,7 @@ class Availability (models.Model):
     def save(self, *args, **kwargs):
         self.check_semester()
         super().save(*args, **kwargs)
-
+    
 class Department (models.Model):
     d_name = models.CharField(max_length=100)
     def __str__(self):

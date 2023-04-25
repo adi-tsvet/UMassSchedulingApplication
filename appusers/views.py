@@ -16,7 +16,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import PasswordResetForm
 
 User = get_user_model()
-
+today = date.today()
 
 def login_view(request):
     if request.method == "POST":
@@ -144,21 +144,17 @@ def activate(request, uidb64, token):
         messages.error(request, 'The activation link is invalid or has expired.')
         return redirect('home')
 
-
 @login_required
 def home_view(request):
-    today = date.today()
     slots = Availability.objects.all().order_by('date')
-    return render(request, 'home_bootstrapped.html', {'slots': slots,'today':today})
-
+    return render(request, 'home2_bootstrapped.html', {'slots': slots,'today':today})
 
 @login_required
 def available_slots(request):
     courses = Course.objects.all()
     tutors = Tutor.objects.all()
     slots = Availability.objects.all().order_by('date')
-    return render(request, 'available_slot.html', {'slots': slots,'courses':courses,'tutors':tutors})
-
+    return render(request, 'available_slot.html', {'slots': slots,'courses':courses,'tutors':tutors,'today':today})
 
 @login_required
 def book_slots(request, availability_id):
@@ -184,7 +180,6 @@ def book_slots(request, availability_id):
     else:
         return render(request, 'booking_page.html', {'slot': availability})
 
-
 @login_required
 def booking_page(request, availability_id):
     availability = get_object_or_404(Availability, id=availability_id)
@@ -200,7 +195,6 @@ def booking_page(request, availability_id):
         return redirect('available_slots')
 
     return render(request, 'booking_page.html', {'slot': availability})
-
 
 @login_required
 def create_slot(request):
@@ -227,7 +221,6 @@ def create_slot(request):
             form = AvailabilityForm(initial=initial_data, user=request.user)
 
     return render(request, 'create_slot_bootstrapped.html', {'form': form})
-
 
 @login_required
 def profile_view(request):
@@ -256,7 +249,6 @@ def profile_view(request):
             form = form_class(instance=profile)
 
     return render(request, 'profile_bootstrapped.html', {'form': form})
-
 
 def assign_roles(request):
     if request.method == 'POST':

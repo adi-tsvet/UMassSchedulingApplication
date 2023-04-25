@@ -1,4 +1,4 @@
-{% extends 'base_bootstrapped.html' %}
+{% extends 'base2_bootstrapped.html' %}
 
 {% block title %}Home{% endblock %}
 
@@ -14,10 +14,11 @@
                 <div class="sticky-top">
                 <h2> Today's student sessions: </h2>
                 {% for session in user.student.booked_slots.all %}
-                    {% if False %} {# session.date == today #}
+                    {% if session.date == today %}
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
                             <h5 class="card-title">{{session.tutor}} || {{ session.semester }}</h5>
+                            <h5 class="card-title">{{session.tutor}}</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{ session.date }}</h6>
                             <p class="card-text">Timing and location : {{ session.timeblock }}</p>
                             <p class="card-text">Course : {{ session.course }}</p>
@@ -33,6 +34,7 @@
                 <h2> Upcoming student sessions: </h2>
 
                 {% for session in user.student.booked_slots.all %}
+                    {% if session.date >= today %}
                     <div class="card">
                         <div class="card-body">
                             <h6 class="card-title">{{ session.semester }}</h6>
@@ -42,6 +44,7 @@
                             <a href="#" class="btn btn-primary">Cancel session</a>
                         </div>
                     </div>
+                    {% endif %}
                 {% empty %}
                     <p>No upcoming sessions found.</p>
                 {% endfor %}
@@ -65,11 +68,12 @@
                     </div>
                     {% endif %}
                 {% empty %}
-                    <p>No tutoring sessions found for Today.</p>
+                    <p>No Tutoring sessions found for Today.</p>
                 {% endfor %}
 
                 <h2> Upcoming tutoring sessions: </h2>
                 {% for session in user.tutor.availabilities.all %}
+                {% if session.date > today %}
                     <div class="card">
                         <div class="card-body">
                             <h6 class="card-title">{{ session.semester }}</h6>
@@ -79,10 +83,16 @@
                             <a href="#" class="btn btn-primary">Cancel session</a>
                         </div>
                     </div>
+                {% endif %}
                 {% empty %}
                     <p>No upcoming sessions found.</p>
                 {% endfor %}
             {% endif %}
+            <div class="mb-3 fw-normal">
+                {% for msg in messages%}
+                    <p>{{msg}}</p>
+                {% endfor %}
+            </div>
 
             {% if user.is_superuser %}
                 <a href="{% url 'assign_roles' %}"><button class = "btn btn-primary" > Assign Roles </button></a>
